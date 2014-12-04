@@ -5,11 +5,6 @@ Vue        = require "vue"
 # {debounce} = require "underscore"
 # qajax      = require "qajax"
 
-dict = (...args)->
-    obj = {}
-    for x from 0 til args.length by 2
-        obj[args[x]] = args[x+1]
-    obj
 
 $ ->
     vm = new Vue(
@@ -53,28 +48,3 @@ $ ->
                 console.log "handshake"
         catch
             console.log "Got malformed data from server", it
-
-
-
-
-
-
-
-# <div class="transaction" v-repeat="d: data" v-on="">
-#     <h1>URI: {{d.uri}} STATUS: {{d.resp.status}}</h1>
-#     <h3 v-on="click: hide(d.req)">Request</h3>
-#     <table v-class="hidden: d.req.hidden">
-#     <tr class="req" v-repeat="d.req.header">
-#         <td>{{ $key }}</td>
-#         <td>{{ $value }}</td>
-#     </tr>
-#     </table>
-#     <h3 v-on="click: hide(d.resp)">Response</h3>
-#     <table v-class="hidden: d.resp.hidden">
-#         <tr class="resp" v-repeat="d.resp.header">
-#             <td>{{ $key }}</td>
-#             <td>{{ $value }}</td>
-#         </tr>
-#     </table>
-#     <p class="title" v-text="keys(d.resp)">asd</p>
-# </div>
