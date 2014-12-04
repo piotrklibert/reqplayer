@@ -36,7 +36,7 @@ $ ->
         }
     )
 
-    sock = new WebSocket("ws://localhost:10100/websocket/")
+    sock = new WebSocket("ws://#{location.host}/websocket/")
 
     sock.onopen = ->
         sock.send "init"
