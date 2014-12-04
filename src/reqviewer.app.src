@@ -1,0 +1,12 @@
+{application, reqviewer,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+    kernel,
+    stdlib
+  ]},
+  {mod, {reqviewer_app, []}},
+  {env, []}
+ ]}.

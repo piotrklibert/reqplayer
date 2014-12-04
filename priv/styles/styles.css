@@ -1,0 +1,29 @@
+body {
+    color: black;
+}
+
+.transaction {
+
+    margin: 20px;
+    border: solid red 2px;
+
+}
+
+
+.hidden {
+    display: none;
+}
+
+table {
+    width: 100%;
+}
+
+.actions {
+    font-weight: bolder;
+    font-size: 30px;
+    width: 110px;
+}
+
+.actions span {
+    cursor: pointer;
+}

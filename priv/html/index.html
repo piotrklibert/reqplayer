@@ -1,0 +1,46 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Piotr Klibert">
+        <link rel="shortcut icon" href="/favicon.png?v=0.1">
+
+        <title>ReqViewer</title>
+
+        <script src="/scripts/bundle.js"></script>
+        <link rel="stylesheet" href="/styles/styles.css" type="text/css">
+    </head>
+    <body>
+        <label for="session-filter">Filtering:</label>
+        <input type="text" placeholder="Type session id here" />
+        <table>
+            <tr>
+                <th></th>
+                <th>Session ID</th>
+                <th>URL</th>
+                <th>Params</th>
+                <th>Status Code</th>
+                <th>Duration</th>
+            </tr>
+            <tr v-repeat="pings">
+                <td class="actions">
+                    <img v-on="click: toggleBody($data)"
+                         src="http://vector-postal.com/images/glass.png"
+                         height="23px"/>
+                    <span title="Export to JSON">▼</span>
+                    <span title="Replay request">⟳</span>
+                </td>
+                <td>
+                    {{sess}}
+                    <pre v-if="show_body">{{formatTraceBody(resp.body)}}</pre>
+                </td>
+                <td>{{uri}}</td>
+                <td>{{args}}</td>
+                <td>{{resp.status}}</td>
+                <td>{{formatTime(time_taken)}} ms</td>
+            </tr>
+        </table>
+    </body>
+
+</html>
