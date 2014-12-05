@@ -18,6 +18,27 @@ table {
     width: 100%;
 }
 
+body > table  td {
+    border-top: red solid 2px;
+}
+body > table  {
+    border-collapse: collapse;
+}
+
+.data-table > div {
+    width: 300px;
+    height: 280px;
+    overflow: auto;
+    float: left;
+}
+
+pre {
+}
+
+table td {
+    vertical-align: top;
+}
+
 .actions {
     font-weight: bolder;
     font-size: 30px;

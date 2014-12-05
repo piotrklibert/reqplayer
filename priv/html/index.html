@@ -17,7 +17,8 @@
         <table>
             <tr>
                 <th></th>
-                <th>Session ID</th>
+                <th width=650>Session ID</th>
+                <th>Method</th>
                 <th>URL</th>
                 <th>Params</th>
                 <th>Status Code</th>
@@ -32,9 +33,24 @@
                     <span title="Replay request">⟳</span>
                 </td>
                 <td>
-                    {{sess}}
-                    <pre v-if="show_body">{{formatTraceBody(resp.body)}}</pre>
+                    <span class="sess-id" v-style="color: colorize(sess)">{{sess}}</span>
+                    <div v-if="show_body" class="data-table">
+                        <div>
+                            <h3>Request headers</h3>
+                            <pre>{{ format(req.header) }}</pre>
+                            <hr/>
+                            <h3>Request body</h3>
+                            <pre>{{ format(req.body) }}</pre>
+                        </div>
+                        <div>
+                            <h3>Response headers</h3>
+                            <pre>{{  format(resp.header) }}</pre>
+                            <h3>Response body</h3>
+                            <pre>{{ resp.body }}</pre>
+                        </div>
+                    </div>
                 </td>
+                <td>{{method}}</td>
                 <td>{{uri}}</td>
                 <td>{{args}}</td>
                 <td>{{resp.status}}</td>
