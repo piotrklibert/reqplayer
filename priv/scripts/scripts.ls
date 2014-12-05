@@ -21,7 +21,6 @@ Vue        = require "vue"
 #  body=resp_body
 # }
 
-COLORS = <[ red blue green teal olive black ]>
 
 $ ->
     sessions-to-colors-map = {}
@@ -51,9 +50,8 @@ $ ->
 
             colorize: ->
                 if it not of sessions-to-colors-map
-                    color = COLORS[ Math.floor (Math.random() * COLORS.length)]
-                    COLORS.splice(COLORS.indexOf(color), 1)
-                    sessions-to-colors-map[it] = color
+                    sessions-to-colors-map[it] = random-rgb!
+
                 sessions-to-colors-map[it]
 
         }
@@ -76,3 +74,26 @@ $ ->
                 console.log "handshake"
         catch
             console.log "Got malformed data from server", it
+
+
+hsv-to-rgb = (h, s, v) ->
+    h_i = Math.round(h*6)
+    f = h*6 - h_i
+    p = v * (1 - s)
+    q = v * (1 - f*s)
+    t = v * (1 - (1 - f) * s)
+    [r,g,b] = switch h_i
+    | 0 => [v, t, p]
+    | 1 => [q, v, p]
+    | 2 => [p, v, t]
+    | 3 => [p, q, v]
+    | 4 => [t, p, v]
+    | 5 => [v, p, q]
+    | otherwise =>
+        [p,v,t] # Doesn't seem to matter very much...
+
+    [Math.round(r*256), Math.round(g*256), Math.round(b*256)]
+
+random-rgb = ->
+    [r,g,b] = hsv-to-rgb Math.random(), 0.5, 0.95
+    "rgb(#r, #g, #b)"
