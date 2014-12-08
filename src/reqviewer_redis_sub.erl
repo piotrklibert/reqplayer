@@ -34,6 +34,8 @@
 -record(state, {
     redis,
     redis_sub,
+    queue,
+    q_len = 0,
     listeners=[],
     filters=[]
 }).
@@ -69,9 +71,10 @@ unregister(Pid) ->
 
 init([]) ->
     {ok, Client, Sub} = reqviewer:start_redis(),
+    io:format("asdasd"),
     eredis_sub:controlling_process(Sub),
     eredis_sub:subscribe(Sub, [?CHANNEL]),
-    {ok, #state{redis=Client, redis_sub=Sub}}.
+    {ok, #state{redis=Client, redis_sub=Sub, queue=queue:new()}}.
 
 
 
@@ -83,7 +86,7 @@ handle_call({unregister, Pid}, _, State) ->
     {reply, ok, drop_listener(Pid, State)};
 
 handle_call(_Request, _From, State) ->
-    {reply, ok, State}.
+    {reply, State, State}.
 
 
 
@@ -102,17 +105,11 @@ handle_info({subscribed, ?CHANNEL, Redis}, #state{redis_sub=Redis} = State) ->
 
 handle_info({message, Chan, Val, RedisSub},
             #state{redis_sub=RedisSub, redis=Redis} = State) ->
-    lager:info("Got ~p from redis, state: ~s", [{Chan, Val}, t:fmt(State)]),
-
-    % {Decoded} = jiffy:decode(Val),
-    % {_, SessID} = lists:keyfind(<<"sess">>, 1, Decoded),
-    % GetLast = ["lrange", SessID, "-1", "-1"],
-    % {ok, Res} = eredis:q(Redis, GetLast),
 
     [Pid ! {text, Val} || Pid <- State#state.listeners],
     eredis_sub:ack_message(RedisSub),
-
-    {noreply, State};
+    State2 = cache_message(State, Val),
+    {noreply, State2};
 
 handle_info(_Info, State) ->
     {noreply, State}.
@@ -135,3 +132,16 @@ add_listener(Pid, State = #state{listeners = Listeners}) ->
 drop_listener(Pid, State = #state{listeners = Listeners}) ->
     lager:info("unregistering: ~p", [Pid]),
     State#state{listeners = Listeners -- [Pid]}.
+
+drop_many(0, Q) -> Q;
+drop_many(N, Q) ->
+    queue:drop(Q),
+    drop_many(N-1, Q).
+
+cache_message(#state{queue=Q, q_len=L} = State, Val) when L >= 130 ->
+    NState = State#state{queue = drop_many(40, Q), q_len = L - 40},
+    cache_message(NState, Val);
+
+cache_message(#state{queue=Q, q_len=L} = State, Val) ->
+    NewQ = queue:in(Val, Q),
+    State#state{queue=NewQ, q_len=L+1}.

@@ -1,67 +1,21 @@
-body {
-    color: black;
-}
-
-.transaction {
-
-    margin: 20px;
-    border: solid red 2px;
-
-}
+body {color: black; padding: 15px;}
 
 
-.hidden {
-    display: none;
-}
+.filter {line-height: 45px;}
+.dump {margin-left: 25px;}
 
-table {
-    width: 100%;
-}
 
-body > table  td {
-    border-top: red solid 2px;
-}
-body > table  {
-    border-collapse: collapse;
-}
+.header > div  {border: solid black 1px; line-height: 30px; text-align: center;}
+.header-actions {line-height: 30px;}
+.header-actions a {font-size: 10px; cursor: pointer;}
 
+
+.row { line-height: 35px;}
+.actions img {height: 13px;}
+.data-table {font-size: 12px; line-height: 15px;}
 .data-table > div {
     width: 300px;
     height: 280px;
-    overflow: auto;
     float: left;
+    overflow: auto;
 }
-
-pre {
-}
-
-.filter {
-    line-height: 45px;
-}
-
-.dump {
-    margin-left: 25px;
-}
-
-.actions {
-    font-weight: bolder;
-    font-size: 30px;
-    /* width: 50px; */
-}
-
-.actions span {
-    cursor: pointer;
-}
-
-.header > div  {
-    border: solid black 1px;
-    line-height: 30px;
-    text-align: center;
-}
-
-.hactions {
-    font-size: 10px;
-    line-height: 30px;
-}
-
-.row { line-height: 35px;}

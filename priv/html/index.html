@@ -12,18 +12,18 @@
         <link rel="stylesheet" href="/styles/styles.css" type="text/css">
         <link rel="stylesheet" href="/styles/flakes.css" type="text/css">
     </head>
-    <body style="padding: 15px">
+    <body>
 
 
         <div class="filter">
             <label for="session-filter">Filter:</label>
             <input type="text" v-model="filterExpr" placeholder="Session or method..." />
-            <a v-if="checked.length &gt;  0" v-attr="href: clicked" class="dump" target="_blank">Dump JSON</a>
+            <a v-if="checked.length &gt;  0" v-attr="href: encodedJsonData" class="dump" target="_blank">Dump JSON</a>
         </div>
 
         <div>
             <div class="grid-12 header">
-                <div class="span-1 hactions">
+                <div class="span-1 header-actions">
                     <a v-on="click: selectAll">Select all</a> /
                     <a v-on="click: deselectAll">Deselect all</a>
                 </div>
@@ -38,13 +38,13 @@
             <div v-repeat="filtered" class="grid-12 row">
                 <div class="actions span-1">
                     <img v-on="click: toggleBody($data)"
-                         src="http://vector-postal.com/images/glass.png"
-                         height="13px"/>
+                         src="img/glass.png" />
                     <input type="checkbox" v-model="checked" />
-
                 </div>
                 <div class="span-4">
-                    <span class="sess-id" v-style="color: colorize(sess)"> {{sess}} @ {{ip}}</span>
+                    <span class="sess-id" v-style="color: colorize(sess)">
+                        {{sess}} @ {{ip}}
+                    </span>
                 </div>
                 <div class="span-1">{{method}}</div>
                 <div class="span-2">{{uri}}</div>
@@ -65,7 +65,7 @@
                         <h3>Response headers</h3>
                         <pre>{{ format(resp.header) }}</pre>
                         <h3>Response body</h3>
-                        <pre>{{ formatResp(resp.body) }}</pre>
+                        <pre>{{ format(resp.body) }}</pre>
                     </div>
                 </div>
 

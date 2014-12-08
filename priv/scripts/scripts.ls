@@ -1,12 +1,8 @@
-_   = require "prelude-ls"
-$   = require "jquery"
-Vue = require "vue"
-m   = require "mori"
-
-# {debounce} = require "underscore"
-# qajax      = require "qajax"
-
+# ==============================================================================
+## Format of incoming JSON data:
+#
 # id           = ngx.now(),
+# ip           = ngx.var.remote_addr,
 # uri          = ngx.var.uri,
 # args         = ngx.req.get_uri_args(),
 # sess         = sid,
@@ -21,70 +17,58 @@ m   = require "mori"
 #  header=resp_header,
 #  body=resp_body
 # }
+# ==============================================================================
+
+_   = require "prelude-ls"
+Vue = require "vue"
+
 
 log = console~log
 tee = (fun, v) --> fun(v); v
+prettify = JSON.stringify _, null, 2
 
-$ ->
+
+window.onload = ->
     sessions-to-colors-map = {}
 
-    window.vm = new Vue(
+    window.vm = new Vue do
         el: "body"
         data:
             pings: []
             filter-expr: ""
 
+
         computed:
             checked: ->
                 _.filter (.checked), @pings
 
-            clicked: ->
-                tmpl = "data:text/plain;base64,"
-                _.filter (.checked), @pings
-                    |> JSON.stringify _, null, 2
-                    |> btoa
-                    |> tee log
-                    |> (tmpl +)
+            encodedJsonData: ->
+                checked-rows = _.filter (.checked), @pings
+                "data:text/plain;base64," + btoa prettify checked-rows
 
             filtered: ->
                 expr = new RegExp(@filter-expr)
                 fun = if @filter-expr
-                    ->  expr.test(it.sess) or expr.test(it.method)
+                    -> expr.test(it.sess) or expr.test(it.method)
                 else
                     -> it
 
                 _.filter fun, @pings
 
-        methods:
-            deselect-all: ->
-                for x in @pings
-                    x.checked = false
 
-            select-all: ->
-                for x in @pings
-                    x.checked = true
+        methods:
+            deselect-all: -> _.map (.checked = false), @pings
+            select-all: -> _.map (.checked = true), @pings
+            toggle-body: -> it.show_body = not it.show_body
 
             formatTime: (time) ->
-                (parseFloat(time) * 1000ms).toFixed 2
+                (parseFloat(time) * 1000ms) .toFixed 2
 
-            format-resp: (response-body) ->
+            format: (response-body) ->
                 if /^{/.test response-body
-                    JSON.stringify (JSON.parse response-body), null, 2
+                    prettify (JSON.parse response-body)
                 else
-                    response-body
-
-            format: ->
-                try
-                    parsed = JSON.parse it
-                    JSON.stringify parsed, null, 2
-                catch ex
-                    JSON.stringify it,null, 2
-
-            toggle-body: ->
-                it.show_body = not it.show_body
-
-            hide: ->
-                it.hidden = not it.hidden
+                    prettify response-body
 
             colorize: (session) ->
                 if session not of sessions-to-colors-map
@@ -92,24 +76,31 @@ $ ->
 
                 sessions-to-colors-map[session]
 
+            add-event: (data) ->
+                data = JSON.parse data
+
+                # add some properties (needed for keeping frontend state) before
+                # passing data to Vue.js so that it can initialize Observables
+                data.show_body = false
+                data.checked = false
+
+                data.args = JSON.stringify data.args
+                this.$data.pings.unshift data
+
 
     sock = new WebSocket("ws://#{location.host}/websocket/")
 
     sock.onopen = ->
+        log "Connecting socket..."
         sock.send "init"
 
     sock.onmessage = ->
-        try
-            data = JSON.parse it.data
-            data.show_body = false
-            data.checked = false
-            if data.args?
-                data.args = JSON.stringify data.args
-                vm.$data.pings.unshift data
-            else
-                console.log "handshake"
-        catch
-            console.log "Got malformed data from server", it
+        data = it.data
+        if data == "ok"
+            log "Socket connected!"
+        else
+            log "Event arrived!"
+            vm.add-event data
 
 
 hsv-to-rgb = (h, s, v) ->

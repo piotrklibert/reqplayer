@@ -28,7 +28,7 @@ init(Req, Opts) ->
 %%--------------------------------------------------------------------
 
 websocket_handle({text, <<"init">>}, Req, State) ->
-    {reply, {text, <<"fuck">>}, Req, State};
+    {reply, {text, <<"ok">>}, Req, State};
 
 websocket_handle({text, Msg}, Req, State) ->
     lager:info("websocket_handle message arrived: ~p", [Msg]),
