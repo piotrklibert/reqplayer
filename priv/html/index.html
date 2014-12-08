@@ -10,53 +10,69 @@
 
         <script src="/scripts/bundle.js"></script>
         <link rel="stylesheet" href="/styles/styles.css" type="text/css">
+        <link rel="stylesheet" href="/styles/flakes.css" type="text/css">
     </head>
-    <body>
-        <label for="session-filter">Filtering:</label>
-        <input type="text" placeholder="Type session id here" />
-        <table>
-            <tr>
-                <th></th>
-                <th width=650>Session ID</th>
-                <th>Method</th>
-                <th>URL</th>
-                <th>Params</th>
-                <th>Status Code</th>
-                <th>Duration</th>
-            </tr>
-            <tr v-repeat="pings">
-                <td class="actions">
+    <body style="padding: 15px">
+
+
+        <div class="filter">
+            <label for="session-filter">Filter:</label>
+            <input type="text" v-model="filterExpr" placeholder="Session or method..." />
+            <a v-if="checked.length &gt;  0" v-attr="href: clicked" class="dump" target="_blank">Dump JSON</a>
+        </div>
+
+        <div>
+            <div class="grid-12 header">
+                <div class="span-1 hactions">
+                    <a v-on="click: selectAll">Select all</a> /
+                    <a v-on="click: deselectAll">Deselect all</a>
+                </div>
+                <div class="span-4">Session ID</div>
+                <div class="span-1">Method</div>
+                <div class="span-2">URL</div>
+                <div class="span-2">Params</div>
+                <div class="span-1">Status Code</div>
+                <div class="span-1">Duration</div>
+            </div>
+
+            <div v-repeat="filtered" class="grid-12 row">
+                <div class="actions span-1">
                     <img v-on="click: toggleBody($data)"
                          src="http://vector-postal.com/images/glass.png"
-                         height="23px"/>
-                    <span title="Export to JSON">▼</span>
-                    <span title="Replay request">⟳</span>
-                </td>
-                <td>
-                    <span class="sess-id" v-style="color: colorize(sess)"> {{sess}} @ {{ip}}</span>
-                    <div v-if="show_body" class="data-table">
-                        <div>
-                            <h3>Request headers</h3>
-                            <pre>{{ format(req.header) }}</pre>
-                            <hr/>
-                            <h3>Request body</h3>
-                            <pre>{{ format(req.body) }}</pre>
-                        </div>
-                        <div>
-                            <h3>Response headers</h3>
-                            <pre>{{  format(resp.header) }}</pre>
-                            <h3>Response body</h3>
-                            <pre>{{ resp.body }}</pre>
-                        </div>
-                    </div>
-                </td>
-                <td>{{method}}</td>
-                <td>{{uri}}</td>
-                <td>{{args}}</td>
-                <td>{{resp.status}}</td>
-                <td>{{formatTime(time_taken)}} ms</td>
-            </tr>
-        </table>
-    </body>
+                         height="13px"/>
+                    <input type="checkbox" v-model="checked" />
 
+                </div>
+                <div class="span-4">
+                    <span class="sess-id" v-style="color: colorize(sess)"> {{sess}} @ {{ip}}</span>
+                </div>
+                <div class="span-1">{{method}}</div>
+                <div class="span-2">{{uri}}</div>
+                <div class="span-2">{{args}}</div>
+                <div class="span-1">{{resp.status}}</div>
+                <div class="span-1">{{formatTime(time_taken)}} ms</div>
+
+                <div v-if="show_body" class="data-table span-12 grid-2">
+                    <div class="req span-1">
+                        <h3>Request headers</h3>
+                        <pre>{{ format(req.header) }}</pre>
+                        <hr/>
+                        <h3>Request body</h3>
+                        <pre>{{ format(req.body) }}</pre>
+                    </div>
+
+                    <div class="resp span-1">
+                        <h3>Response headers</h3>
+                        <pre>{{ format(resp.header) }}</pre>
+                        <h3>Response body</h3>
+                        <pre>{{ formatResp(resp.body) }}</pre>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        </div>
+
+    </body>
 </html>

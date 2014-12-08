@@ -35,16 +35,33 @@ body > table  {
 pre {
 }
 
-table td {
-    vertical-align: top;
+.filter {
+    line-height: 45px;
+}
+
+.dump {
+    margin-left: 25px;
 }
 
 .actions {
     font-weight: bolder;
     font-size: 30px;
-    width: 110px;
+    /* width: 50px; */
 }
 
 .actions span {
     cursor: pointer;
 }
+
+.header > div  {
+    border: solid black 1px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.hactions {
+    font-size: 10px;
+    line-height: 30px;
+}
+
+.row { line-height: 35px;}
