@@ -52,7 +52,10 @@
                 <div class="span-2">{{uri}}</div>
                 <div class="span-2">{{args}}</div>
                 <div class="span-1">{{resp.status}}</div>
-                <div class="span-1">{{formatTime(time_taken)}} ms</div>
+                <div class="span-1" style="font-size: 12px;">
+                    {{formatTime(time_taken)}}ms
+                    (@{{formatDate(id)}})
+                </div>
 
                 <div v-if="show_body" class="data-table span-12 grid-2">
                     <div class="req span-1">

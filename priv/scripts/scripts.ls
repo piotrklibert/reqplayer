@@ -64,6 +64,17 @@ window.onload = ->
             formatTime: (time) ->
                 (parseFloat(time) * 1000ms) .toFixed 2
 
+            formatDate: (timestamp) ->
+                date = new Date(timestamp*1000ms)
+                # year = date.getFullYear()
+                # month = date.getMonth()  + 1
+                # day = date.getDate()
+                hour = date.getHours()
+                min = date.getMinutes()
+                sec = date.getSeconds()
+                # "#day-#month-#year"
+                "#hour:#min:#sec"
+
             format: (response-body) ->
                 if /^{/.test response-body
                     prettify (JSON.parse response-body)
@@ -120,6 +131,13 @@ hsv-to-rgb = (h, s, v) ->
     | otherwise => [p, v, t]
 
     [Math.round(r*256), Math.round(g*256), Math.round(b*256)]
+
+
+f = (colors, target) ->
+    for c in _.values colors
+        diff = _.map (([a,b]) -> Math.abs(a - b)), (_.zip target, c)
+        if diff < 45
+            return
 
 random-rgb = ->
     [r,g,b] = hsv-to-rgb Math.random(), 0.5, 0.95
