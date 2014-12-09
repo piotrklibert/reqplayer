@@ -8743,7 +8743,7 @@ f = function(colors, target){
 };
 randomRgb = function(){
   var ref$, r, g, b;
-  ref$ = hsvToRgb(Math.random(), 0.5, 0.95), r = ref$[0], g = ref$[1], b = ref$[2];
+  ref$ = hsvToRgb(Math.random(), 0.5, 0.45), r = ref$[0], g = ref$[1], b = ref$[2];
   return "rgb(" + r + ", " + g + ", " + b + ")";
 };
 function bind$(obj, key, target){

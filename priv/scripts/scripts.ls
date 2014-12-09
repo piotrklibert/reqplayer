@@ -140,5 +140,5 @@ f = (colors, target) ->
             return
 
 random-rgb = ->
-    [r,g,b] = hsv-to-rgb Math.random(), 0.5, 0.95
+    [r,g,b] = hsv-to-rgb Math.random(), 0.5, 0.45
     "rgb(#r, #g, #b)"

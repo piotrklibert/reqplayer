@@ -11,15 +11,19 @@ body {color: black; padding: 15px;}
 
 
 .row {
-        border-left: solid black 1px;
+    border-left: solid black 1px;
     border-right: solid black 1px;
     border-bottom: solid black 1px;
-    line-height: 35px;}
+    padding-top: 15px;
+    padding-bottom: 13px;
+    /* line-height: 35px; */
+}
 .actions { text-align:center; }
 .actions img {height: 13px;}
 .data-table {
     font-size: 12px;
     line-height: 15px;
+    background: #d1d1d1;
 }
 .data-table > div {
     width: 300px;
