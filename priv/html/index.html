@@ -41,11 +41,13 @@
                          src="img/glass.png" />
                     <input type="checkbox" v-model="checked" />
                 </div>
+
                 <div class="span-4">
                     <span class="sess-id" v-style="color: colorize(sess)">
                         {{sess}} @ {{ip}}
                     </span>
                 </div>
+
                 <div class="span-1">{{method}}</div>
                 <div class="span-2">{{uri}}</div>
                 <div class="span-2">{{args}}</div>
