@@ -42,22 +42,23 @@
                     <input type="checkbox" v-model="checked" />
                 </div>
 
-                <div class="span-4">
+                <div class="span-4 sess-id-wrap">
                     <span class="sess-id" v-style="color: colorize(sess)">
-                        {{sess}} (from: {{ip}})
+                        {{sess}}
                     </span>
+                    (IP:  {{ip}})
                 </div>
 
-                <div class="span-1">{{method}}</div>
-                <div class="span-2">{{uri}}</div>
-                <div class="span-2">{{args}}</div>
-                <div class="span-1">{{resp.status}}</div>
-                <div class="span-1" style="font-size: 12px;">
+                <div class="span-1 method">{{method}}</div>
+                <div class="span-2 uri">{{uri}}</div>
+                <div class="span-2 args">{{args}}</div>
+                <div class="span-1 status">{{resp.status}}</div>
+                <div class="span-1 time" style="font-size: 12px;">
                     {{formatTime(time_taken)}}ms
                     (@{{formatDate(id)}})
                 </div>
 
-                <div v-if="show_body" class="data-table span-12 grid-2">
+                <div v-if="show_body" class="data-table span-12 grid-2 gutter-50">
                     <div class="req span-1">
                         <h3>Request headers</h3>
                         <pre>{{ format(req.header) }}</pre>
