@@ -21,7 +21,7 @@
 
 _   = require "prelude-ls"
 Vue = require "vue"
-
+$   = require "jquery"
 
 log = console~log
 tee = (fun, v) --> fun(v); v
@@ -36,7 +36,8 @@ window.onload = ->
         data:
             pings: []
             filter-expr: ""
-
+            history: false
+            count: 0
 
         computed:
             checked: ->
@@ -96,7 +97,10 @@ window.onload = ->
                 sessions-to-colors-map[session]
 
             add-event: (data) ->
-                data = JSON.parse data
+                try
+                    data = JSON.parse data
+                catch ex
+                    # probably already an object, so continue
 
                 # add some properties (needed for keeping frontend state) before
                 # passing data to Vue.js so that it can initialize Observables
@@ -104,7 +108,11 @@ window.onload = ->
                 data.checked = false
 
                 data.args = prettify data.args
+                @$data.count++
                 this.$data.pings.unshift data
+
+    # prepopulate a list with some data...?
+    $.getJSON "/history", _.map vm~add-event
 
 
     sock = new WebSocket("ws://#{location.host}/websocket/")

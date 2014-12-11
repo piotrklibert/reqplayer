@@ -20,18 +20,17 @@
             <input type="text" v-model="filterExpr" placeholder="Session or method..." />
             <a v-if="checked.length &gt;  0" v-attr="href: encodedJsonData" class="dump" target="_blank">Dump JSON</a>
         </div>
-
+        {{count}}
         <div>
             <div class="grid-12 header">
                 <div class="span-1 header-actions">
-                    <a v-on="click: selectAll">Select all</a> /
-                    <a v-on="click: deselectAll">Deselect all</a>
+                    <a v-on="click: selectAll">Select all</a>&nbsp;/&nbsp;<a v-on="click: deselectAll">Deselect all</a>
                 </div>
                 <div class="span-4">Session ID</div>
                 <div class="span-1">Method</div>
                 <div class="span-2">URL</div>
                 <div class="span-2">Params</div>
-                <div class="span-1">Status Code</div>
+                <div class="span-1">Status</div>
                 <div class="span-1">Duration</div>
             </div>
 

@@ -39,6 +39,7 @@ start(_StartType, _StartArgs) ->
     RoutesTable = cowboy_router:compile(
         [{'_', [
             {"/websocket", reqviewer_handler, []},
+            {"/history", reqviewer_handler_history, []},
             {"/", cowboy_static, {priv_file, reqviewer, "html/index.html"}},
             {"/[...]", cowboy_static, {priv_dir, reqviewer, ""}}
         ]}]

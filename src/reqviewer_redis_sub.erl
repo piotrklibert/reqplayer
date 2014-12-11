@@ -30,6 +30,7 @@
 -export([register/0]).
 -export([register/1]).
 -export([unregister/1]).
+-export([history/0]).
 
 -record(state, {
     redis,
@@ -59,8 +60,14 @@ register() ->
 register(Pid) ->
     gen_server:call(?MODULE, {register, Pid}).
 
+
 unregister(Pid) ->
     gen_server:call(?MODULE, {unregister, Pid}).
+
+
+history() ->
+    gen_server:call(?MODULE, {history}).
+
 
 % filter(Pid, SessionId) ->
 %     ok.
@@ -85,6 +92,9 @@ handle_call({register, Pid}, _, State) ->
 handle_call({unregister, Pid}, _, State) ->
     {reply, ok, drop_listener(Pid, State)};
 
+handle_call({history}, _, State) ->
+    {reply, State#state.queue, State};
+
 handle_call(_Request, _From, State) ->
     {reply, State, State}.
 
@@ -103,8 +113,8 @@ handle_info({subscribed, ?CHANNEL, Redis}, #state{redis_sub=Redis} = State) ->
     eredis_sub:ack_message(Redis),
     {noreply, State};
 
-handle_info({message, Chan, Val, RedisSub},
-            #state{redis_sub=RedisSub, redis=Redis} = State) ->
+handle_info({message, _Chan, Val, RedisSub},
+            #state{redis_sub=RedisSub, redis=_Redis} = State) ->
 
     [Pid ! {text, Val} || Pid <- State#state.listeners],
     eredis_sub:ack_message(RedisSub),
@@ -133,13 +143,22 @@ drop_listener(Pid, State = #state{listeners = Listeners}) ->
     lager:info("unregistering: ~p", [Pid]),
     State#state{listeners = Listeners -- [Pid]}.
 
+
+
+%% Functions for maintaining cache/history of requests of a given length
+
+-define(DROP_STEP, 40).
+
 drop_many(0, Q) -> Q;
 drop_many(N, Q) ->
-    queue:drop(Q),
-    drop_many(N-1, Q).
+    Q2 = queue:drop(Q),
+    drop_many(N-1, Q2).
 
-cache_message(#state{queue=Q, q_len=L} = State, Val) when L >= 130 ->
-    NState = State#state{queue = drop_many(40, Q), q_len = L - 40},
+cache_message(#state{queue=Q, q_len=L} = State, Val) when L >= ?DROP_STEP * 4 ->
+    NState = State#state{
+               queue = drop_many(?DROP_STEP, Q),
+               q_len = L - ?DROP_STEP
+    },
     cache_message(NState, Val);
 
 cache_message(#state{queue=Q, q_len=L} = State, Val) ->
