@@ -8653,6 +8653,16 @@ window.onload = function(){
       formatTime: function(time){
         return (parseFloat(time) * 1000).toFixed(2);
       },
+      formatReq: function(req){
+        var args, k, ref$, v;
+        args = "";
+        for (k in ref$ = JSON.parse(req.args)) {
+          v = ref$[k];
+          args += k + "=" + encodeURIComponent(v) + "&";
+        }
+        args = args.replace(/&$/, "");
+        return req.method + " " + req.uri + "?" + args;
+      },
       formatDate: function(timestamp){
         var date, hour, min, sec;
         date = new Date(timestamp * 1000);
@@ -8678,7 +8688,7 @@ window.onload = function(){
         data = JSON.parse(data);
         data.show_body = false;
         data.checked = false;
-        data.args = JSON.stringify(data.args);
+        data.args = prettify(data.args);
         return this.$data.pings.unshift(data);
       }
     }

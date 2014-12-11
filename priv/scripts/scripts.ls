@@ -64,6 +64,14 @@ window.onload = ->
             formatTime: (time) ->
                 (parseFloat(time) * 1000ms) .toFixed 2
 
+            format-req: (req) ->
+                args = ""
+                for k,v of JSON.parse(req.args)
+                    args += k + "=" + encodeURIComponent(v) + "&"
+                args = args.replace(/&$/, "")
+
+                "#{req.method} #{req.uri}?#{args}"
+
             formatDate: (timestamp) ->
                 date = new Date(timestamp*1000ms)
                 # year = date.getFullYear()
@@ -95,7 +103,7 @@ window.onload = ->
                 data.show_body = false
                 data.checked = false
 
-                data.args = JSON.stringify data.args
+                data.args = prettify data.args
                 this.$data.pings.unshift data
 
 

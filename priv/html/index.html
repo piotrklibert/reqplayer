@@ -43,10 +43,10 @@
                 </div>
 
                 <div class="span-4 sess-id-wrap">
-                    <span class="sess-id" v-style="color: colorize(sess)">
+                    <span class="sess-id" v-on="click: toggleBody($data)" v-style="color: colorize(sess)">
                         {{sess}}
                     </span>
-                    (IP:  {{ip}})
+                    (IP:&nbsp;{{ip}})
                 </div>
 
                 <div class="span-1 method">{{method}}</div>
@@ -60,6 +60,7 @@
 
                 <div v-if="show_body" class="data-table span-12 grid-2">
                     <div class="req span-1">
+                        <h3>{{formatReq($data)}}</h3>
                         <h3>Request headers</h3>
                         <pre>{{ format(req.header) }}</pre>
                         <hr/>
