@@ -45,7 +45,8 @@ window.onload = ->
 
         computed:
             count: -> @filtered.length
-            checked: -> _.filter (.checked), @pings
+
+            checked: -> _.filter (.checked), @filtered
 
             encodedJsonData: ->
                 checked-rows = _.filter (.checked), @pings

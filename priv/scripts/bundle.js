@@ -9091,7 +9091,7 @@ window.onload = function(){
       checked: function(){
         return _.filter(function(it){
           return it.checked;
-        }, this.pings);
+        }, this.filtered);
       },
       encodedJsonData: function(){
         var checkedRows;
