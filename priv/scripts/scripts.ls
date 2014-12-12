@@ -19,13 +19,18 @@
 # }
 # ==============================================================================
 
-_   = require "prelude-ls"
-Vue = require "vue"
-$   = require "jquery"
+
+require! {
+    "prelude-ls": _
+    "vue": Vue
+    jx
+}
+
 
 log = console~log
 tee = (fun, v) --> fun(v); v
 prettify = JSON.stringify _, null, 2
+getJSON = (url, callback) -> jx.get(url).success callback
 
 
 window.onload = ->
@@ -37,18 +42,17 @@ window.onload = ->
             pings: []
             filter-expr: ""
             history: false
-            count: 0
 
         computed:
-            checked: ->
-                _.filter (.checked), @pings
+            count: -> @filtered.length
+            checked: -> _.filter (.checked), @pings
 
             encodedJsonData: ->
                 checked-rows = _.filter (.checked), @pings
                 "data:text/plain;base64," + btoa prettify checked-rows
 
             filtered: ->
-                expr = new RegExp(@filter-expr)
+                expr = new RegExp(@filter-expr.toLowerCase!)
                 fun = if @filter-expr
                     -> expr.test(it.sess) or expr.test(it.method)
                 else
@@ -112,7 +116,7 @@ window.onload = ->
                 this.$data.pings.unshift data
 
     # prepopulate a list with some data...?
-    $.getJSON "/history", _.map vm~add-event
+    getJSON "/history", _.map vm~add-event
 
 
     sock = new WebSocket("ws://#{location.host}/websocket/")

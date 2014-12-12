@@ -38,9 +38,10 @@ body {color: black; padding: 15px;}
 
 .data-table > div {
     width: 300px;
-    height: 280px;
+    height: 240px;
     float: left;
     overflow: auto;
+    background-color: #fefefe;
 }
 
 .sess-id-wrap{
@@ -55,4 +56,28 @@ body {color: black; padding: 15px;}
     text-transform: uppercase;
     font-size: 14px;
     cursor: pointer;
+}
+
+
+.fade-in-out {
+  transition: all .4s ease-in;
+}
+
+.fade-in-out.fade-in-out-enter,
+.fade-in-out.fade-in-out-leave {
+  /* height: 0; */
+  /* padding: 0 10px; */
+  opacity: 0;
+}
+
+.slide-in-out {
+    transition: all .2s ease-in;
+    height: 300px;
+    overflow: hidden;
+    margin-top: 17px;
+}
+
+.slide-in-out.slide-in-out-enter,
+.slide-in-out.slide-in-out-leave {
+    height: 0;
 }

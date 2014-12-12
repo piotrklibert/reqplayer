@@ -18,9 +18,10 @@
         <div class="filter">
             <label for="session-filter">Filter:</label>
             <input type="text" v-model="filterExpr" placeholder="Session or method..." />
-            <a v-if="checked.length &gt;  0" v-attr="href: encodedJsonData" class="dump" target="_blank">Dump JSON</a>
+            <span class=count>(reqs: {{count}})</span>
+            <a v-if="checked.length &gt;  0" v-transition="fade-in-out" v-attr="href: encodedJsonData" class="fade-in-out dump" target="_blank">Dump JSON</a>
         </div>
-        {{count}}
+
         <div>
             <div class="grid-12 header">
                 <div class="span-1 header-actions">
@@ -34,7 +35,8 @@
                 <div class="span-1">Duration</div>
             </div>
 
-            <div v-repeat="filtered" class="grid-12 row">
+
+            <div v-repeat="filtered" class="grid-12 row fade-in-out" v-transition="fade-in-out">
                 <div class="actions span-1">
                     <img v-on="click: toggleBody($data)"
                          src="img/glass.png" />
@@ -57,7 +59,7 @@
                     (@{{formatDate(id)}})
                 </div>
 
-                <div v-if="show_body" class="data-table span-12 grid-2">
+                <div v-if="show_body" class="data-table span-12 grid-2 slide-in-out" v-transition="slide-in-out">
                     <div class="req span-1">
                         <h3>{{formatReq($data)}}</h3>
                         <h3>Request headers</h3>
@@ -74,7 +76,6 @@
                         <pre>{{ format(resp.body) }}</pre>
                     </div>
                 </div>
-
             </div>
 
         </div>
