@@ -9088,17 +9088,15 @@ window.onload = function(){
       count: function(){
         return this.filtered.length;
       },
-      checked: function(){
-        return _.filter(function(it){
+      selectedRows: function(){
+        return _.reverse(
+        _.filter(function(it){
           return it.checked;
-        }, this.filtered);
+        })(
+        this.filtered));
       },
       encodedJsonData: function(){
-        var checkedRows;
-        checkedRows = _.filter(function(it){
-          return it.checked;
-        }, this.pings);
-        return "data:text/plain;base64," + btoa(prettify(checkedRows));
+        return "data:text/plain;base64," + btoa(prettify(this.selectedRows));
       },
       filtered: function(){
         var expr, fun;

@@ -46,11 +46,13 @@ window.onload = ->
         computed:
             count: -> @filtered.length
 
-            checked: -> _.filter (.checked), @filtered
+            selected-rows: ->
+                @filtered
+                    |> _.filter (.checked)
+                    |> _.reverse
 
             encodedJsonData: ->
-                checked-rows = _.filter (.checked), @pings
-                "data:text/plain;base64," + btoa prettify checked-rows
+                "data:text/plain;base64," + btoa prettify @selected-rows
 
             filtered: ->
                 expr = new RegExp(@filter-expr.toLowerCase!)

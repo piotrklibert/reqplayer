@@ -5,3 +5,4 @@ log
 priv/node_modules
 bundle.js
 rel
+*.pyc

@@ -19,7 +19,7 @@
             <label for="session-filter">Filter:</label>
             <input type="text" v-model="filterExpr" placeholder="Session or method..." />
             <span class=count>(reqs: {{count}})</span>
-            <a v-if="checked.length &gt;  0" v-transition="fade-in-out" v-attr="href: encodedJsonData" class="fade-in-out dump" target="_blank">Dump JSON</a>
+            <a v-if="selectedRows.length &gt;  0" v-transition="fade-in-out" v-attr="href: encodedJsonData" class="fade-in-out dump" target="_blank">Dump JSON</a>
         </div>
 
         <div>
