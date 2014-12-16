@@ -78,7 +78,6 @@ history() ->
 
 init([]) ->
     {ok, Client, Sub} = reqviewer:start_redis(),
-    io:format("asdasd"),
     eredis_sub:controlling_process(Sub),
     eredis_sub:subscribe(Sub, [?CHANNEL]),
     {ok, #state{redis=Client, redis_sub=Sub, queue=queue:new()}}.
