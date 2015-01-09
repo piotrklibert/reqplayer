@@ -55,8 +55,8 @@
                 <div class="span-2 args">{{args}}</div>
                 <div class="span-1 status">{{resp.status}}</div>
                 <div class="span-1 time" style="font-size: 12px;">
-                    {{formatTime(time_taken)}}ms
-                    (@{{formatDate(id)}})
+                    {{formatTime(time_taken)}}ms<br/>
+                    ({{formatDate(id)}})
                 </div>
 
                 <div v-if="show_body" class="data-table span-12 grid-2 slide-in-out" v-transition="slide-in-out">
