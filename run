@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 export ERL_LIBS=`pwd`
-if rebar compile; then
+if ./rebar compile; then
     erl \
         -pa deps/cowboy/ebin deps/cowlib/ebin deps/goldrush/ebin \
             deps/lager/ebin deps/ranch/ebin deps/eredis/ebin/ \
