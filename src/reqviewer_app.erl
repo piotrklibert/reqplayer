@@ -8,7 +8,7 @@
 
 -export([start/0]).
 
--define(SERVER_PORT, 10100).
+-define(SERVER_PORT, 80).
 
 
 %% ===================================================================
@@ -24,14 +24,19 @@ start() ->
 %% Application callbacks
 %% ===================================================================
 
+
 start(_StartType, _StartArgs) ->
-    ok = application:start(ranch),
-    ok = application:start(crypto),
-    ok = application:start(cowlib),
-    ok = application:start(cowboy),
+    try
+        ok = application:start(ranch),
+        ok = application:start(crypto),
+        ok = application:start(cowlib),
+        ok = application:start(cowboy)
+    catch
+        Cls:Error ->
+            io:format("A prerequisite module ~p not found", [Error])
+    end,
 
     lager:start(),
-
 
     {ok, _} = reqviewer_sup:start_link(self()),
 
