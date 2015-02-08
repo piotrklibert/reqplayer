@@ -1,6 +1,19 @@
 #! /usr/bin/env bash
 
 export ERL_LIBS=`pwd`           # NOTE: current dir HAS to be named reqviewer!
+
+if [[ "$REDIS_HOST" ]]; then
+    mv app.config app.config.prev
+    sed "s/\"127.0.0.1\"/\"$REDIS_HOST\"/" app.config.prev > app.config
+    rm app.config.prev
+fi;
+
+if [[ ! "$HOME" && -d /home/app ]]; then
+    # chances are we're running inside a docker container, which is stupid and
+    # doesn't set $HOME at all, so let's fix it
+    export HOME="/home/app"
+fi
+
 if ./rebar compile; then
     erl \
         -pa deps/cowboy/ebin deps/cowlib/ebin deps/goldrush/ebin \
