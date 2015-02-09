@@ -8,8 +8,6 @@
 
 -export([start/0]).
 
--define(SERVER_PORT, 80).
-
 
 %% ===================================================================
 %% External API
@@ -26,6 +24,8 @@ start() ->
 
 
 start(_StartType, _StartArgs) ->
+    {ok, ServerPort} = application:get_env(reqviewer, viewer_port),
+
     try
         ok = application:start(ranch),
         ok = application:start(crypto),
@@ -52,7 +52,7 @@ start(_StartType, _StartArgs) ->
     ),
 
     {ok, _} = cowboy:start_http(
-        http, 15, [{port, ?SERVER_PORT}],
+        http, 15, [{port, ServerPort}],
         [{env, [{dispatch, RoutesTable}]}]
     ).
 

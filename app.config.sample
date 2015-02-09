@@ -3,6 +3,7 @@
  {lager, [{handlers, [{lager_console_backend, info}]}]},
  {reqviewer, [
     {redis_port, 6379},
-    {redis_host, "127.0.0.1"}
+    {redis_host, "127.0.0.1"},
+    {viewer_port, 10100}
  ]}
 ].
