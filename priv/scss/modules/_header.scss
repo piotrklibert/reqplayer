@@ -1,0 +1,26 @@
+$module: 'header';
+
+.#{$module} {
+	background-color: $very-light-gray;
+	border-bottom: 1px solid $gray;
+	padding: $main-container-padding;
+}
+
+.#{$module}__actions {
+	padding: $input-padding;
+}
+
+.#{$module}__app-logo {
+	color: darken($gray, 20%);
+	padding: $input-padding;
+}
+
+.#{$module}__filter-label {
+	@extend %inline-block;
+	padding: 0 0.5em;
+}
+
+.#{$module}__filter-input {
+	@extend %inline-block;
+	width: 75%;
+}
