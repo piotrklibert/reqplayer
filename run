@@ -6,7 +6,7 @@ if [[ "$REDIS_HOST" ]]; then
     mv app.config app.config.prev
     sed "s/\"127.0.0.1\"/\"$REDIS_HOST\"/" app.config.prev > app.config
     rm app.config.prev
-fi;
+fi
 
 if [[ ! "$HOME" && -d /home/app ]]; then
     # chances are we're running inside a docker container, which is stupid and
