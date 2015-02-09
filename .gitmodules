@@ -1,0 +1,15 @@
+[submodule "deps/lager"]
+	path = deps/lager
+	url = git://github.com/basho/lager.git
+[submodule "deps/cowboy"]
+	path = deps/cowboy
+	url = git://github.com/extend/cowboy.git
+[submodule "deps/eredis"]
+	path = deps/eredis
+	url = git@github.com:wooga/eredis.git
+[submodule "deps/jiffy"]
+	path = deps/jiffy
+	url = git@github.com:davisp/jiffy.git
+[submodule "deps/kvc"]
+	path = deps/kvc
+	url = git@github.com:etrepum/kvc.git
