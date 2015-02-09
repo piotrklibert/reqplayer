@@ -1,0 +1,8 @@
+input[type="text"] {
+	border: 1px solid $gray;
+	-moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  box-shadow: inset -1px -1px 5px $gray;
+  padding: 0.5em 0.75em;
+}

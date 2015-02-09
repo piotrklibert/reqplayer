@@ -1,5 +1,6 @@
 @import "utils/variables";
 @import "utils/reset";
+@import "utils/effects";
 
 @import "fonts/fonts";
 
@@ -8,3 +9,5 @@
 @import "components/text-input";
 
 @import "modules/header";
+@import "modules/main-table";
+@import "modules/data-table";

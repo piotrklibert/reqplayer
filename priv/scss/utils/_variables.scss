@@ -3,11 +3,27 @@
 // ==============================================================================
 
 $font-regular: 'open-sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$font-monospace: 'inconsolata', monospace;
+
 
 // ==============================================================================
 // Colors
 // ==============================================================================
 
-$light-black: #222;
+$white: #ffffff;
+$light-black: #444444;
+$gray: #a7a7a7;
+$very-light-gray: #dedede;
+$navy: #4a5664;
+$red: #e13742;
 
 $body-color: $light-black;
+$table-border-color: $gray;
+
+
+// ==============================================================================
+// Other
+// ==============================================================================
+
+$main-container-padding: 1rem 2.5rem;
+$table-item-padding: 1em 0;

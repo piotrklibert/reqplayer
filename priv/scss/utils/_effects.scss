@@ -1,0 +1,17 @@
+.fade-in-out {
+  transition: all .4s ease-in;
+}
+
+.fade-in-out.fade-in-out-enter,
+.fade-in-out.fade-in-out-leave {
+  opacity: 0;
+}
+
+.slide-in-out {
+  transition: all .8s;
+}
+
+.slide-in-out.slide-in-out-enter,
+.slide-in-out.slide-in-out-leave {
+  height: 0;
+}

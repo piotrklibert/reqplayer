@@ -1,0 +1,11 @@
+$module: 'header';
+
+.#{$module} {
+	background-color: $very-light-gray;
+	border-bottom: 1px solid $gray;
+	padding: $main-container-padding;
+}
+
+.#{$module}__filter-input {
+	width: 100%;
+}

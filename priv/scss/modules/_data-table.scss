@@ -1,0 +1,13 @@
+$module: 'data-table';
+
+.#{$module} {
+	border-top: 1px solid $table-border-color;
+	height: 400px; // height after slide in
+	overflow: hidden;
+}
+
+.#{$module}__col {
+	height: 100%;
+	overflow: auto;
+	padding: 2em;
+}
