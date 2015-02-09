@@ -188,8 +188,7 @@ input[type="text"] {
     background-color: #dedede; }
 
 .main-table__row-item--sid-wrap {
-  font-family: "inconsolata", monospace;
-  font-size: 110%; }
+  font-family: "inconsolata", monospace; }
   .main-table__row-item--sid-wrap .sid {
     text-transform: uppercase; }
 

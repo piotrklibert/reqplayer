@@ -40,7 +40,6 @@ $module: 'main-table';
 .#{$module}__row-item--sid-wrap {
 	@extend .#{$module}__row-item;
 	font-family: $font-monospace;
-  font-size: 110%;
 
   .sid {
   	text-transform: uppercase;

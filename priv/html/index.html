@@ -29,16 +29,16 @@
         <section class="main-table">
             <header class="main-table__header grid-12">
                 <div class="main-table__header-title span-1">
-                    <a v-on="click: selectAll">Select all</a>&nbsp;/&nbsp;<a v-on="click: deselectAll">Deselect all</a>
+                   <!--  <a v-on="click: selectAll">Select all</a>&nbsp;/&nbsp;<a v-on="click: deselectAll">Deselect all</a> -->
+                   <input type="checkbox" v-on="change: selectAll.arguments.event.target.checked" />
                 </div>
                 <div class="main-table__header-title span-4">Session ID</div>
                 <div class="main-table__header-title span-1">Method</div>
                 <div class="main-table__header-title span-2">URL</div>
-                <div class="main-table__header-title span-2">Params</div>
+                <div class="main-table__header-title span-1">Params</div>
                 <div class="main-table__header-title span-1">Status</div>
-                <div class="main-table__header-title span-1">Duration</div>
+                <div class="main-table__header-title span-2">Duration</div>
             </header>
-
 
             <div v-repeat="filtered" class="main-table__row grid-12 fade-in-out" v-transition="fade-in-out" v-on="click: toggleBody($data)">
                 <div class="main-table__row-item span-1">
@@ -50,11 +50,11 @@
                     </span>
                     (IP:&nbsp;{{ip}})
                 </div>
-                <div class="main-table__row-item span-1 method">{{method}}</div>
-                <div class="main-table__row-item span-2 uri">{{uri}}</div>
-                <div class="main-table__row-item span-2 args">{{args}}</div>
-                <div class="main-table__row-item span-1 status">{{resp.status}}</div>
-                <div class="main-table__row-item span-1 time">
+                <div class="main-table__row-item span-1">{{method}}</div>
+                <div class="main-table__row-item span-2">{{uri}}</div>
+                <div class="main-table__row-item span-1">{{args}}</div>
+                <div class="main-table__row-item span-1">{{resp.status}}</div>
+                <div class="main-table__row-item span-2">
                     {{formatTime(time_taken)}}ms ({{formatDate(id)}})
                 </div>
 
