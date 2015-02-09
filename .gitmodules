@@ -13,3 +13,6 @@
 [submodule "deps/kvc"]
 	path = deps/kvc
 	url = git@github.com:etrepum/kvc.git
+[submodule "deps/goldrush"]
+	path = deps/goldrush
+	url = git://github.com/DeadZen/goldrush.git
