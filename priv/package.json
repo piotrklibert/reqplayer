@@ -21,5 +21,8 @@
     "qajax": "^0.2.4",
     "underscore": "^1.7.0",
     "vue": "^0.11.4"
+  },
+  "devDependencies": {
+    "liveify": "~1.3.1"
   }
 }

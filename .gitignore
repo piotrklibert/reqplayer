@@ -3,6 +3,9 @@ deps
 ebin
 log
 priv/node_modules
+priv/.sass-cache
 bundle.js
 rel
+app.config
 *.pyc
+*.css.map
