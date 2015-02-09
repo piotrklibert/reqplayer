@@ -26,11 +26,17 @@ require! {
     jx
 }
 
+hljs = require "highlight.js"
 
 log = console~log
 tee = (fun, v) --> fun(v); v
 prettify = JSON.stringify _, null, 2
 getJSON = (url, callback) -> jx.get(url).success callback
+format-json = (json-string) ->
+    block = document.createElement \div
+    block.textContent = prettify json-string
+    hljs.highlightBlock block
+    block.innerHTML
 
 
 window.onload = ->
@@ -68,8 +74,8 @@ window.onload = ->
             toggle-all: (ev) ->
                 _.map (.checked = ev.target.checked), @pings
 
-            deselect-all: -> _.map (.checked = false), @pings
-            select-all: -> _.map (.checked = true), @pings
+            # deselect-all: -> _.map (.checked = false), @pings
+            # select-all: -> _.map (.checked = true), @pings
             toggle-body: -> it.show_body = not it.show_body
 
             formatTime: (time) ->
@@ -118,6 +124,22 @@ window.onload = ->
                 data.checked = false
 
                 data.args = prettify data.args
+                data.req.pretty_header = format-json data.req.header
+                try
+                    data.req.pretty_body = format-json data.req.body
+                catch ex
+                    data.req.pretty_body = data.req.body
+
+
+                data.resp.pretty_header = format-json data.resp.header
+                try
+                    data.resp.pretty_body = format-json JSON.parse data.resp.body
+                catch ex
+                    d = document.createElement \div
+                    d.appendChild document.createTextNode data.resp.body
+                    data.resp.pretty_body = d.innerHTML
+
+
                 @$data.count++
                 this.$data.pings.unshift data
 

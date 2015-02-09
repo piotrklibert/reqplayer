@@ -9,8 +9,11 @@
         <title>ReqViewer</title>
 
         <script src="/scripts/bundle.js"></script>
+
         <link rel="stylesheet" href="/styles/flakes.css" type="text/css">
         <link rel="stylesheet" href="/styles/main.css" type="text/css">
+        <link rel="stylesheet" href="/node_modules/highlight.js/styles/tomorrow.css">
+
     </head>
     <body>
 
@@ -62,17 +65,17 @@
                     <div class="data-table__col req span-1">
                         <h3>{{formatReq($data)}}</h3>
                         <h3>Request headers</h3>
-                        <pre>{{ format(req.header) }}</pre>
+                        <pre><code class="json" v-html="req.pretty_header"></code></pre>
                         <hr/>
                         <h3>Request body</h3>
-                        <pre>{{ format(req.body) }}</pre>
+                        <pre><code class="json" v-html="req.pretty_body"></code></pre>
                     </div>
 
                     <div class="data-table__col resp span-1">
                         <h3>Response headers</h3>
-                        <pre>{{ format(resp.header) }}</pre>
+                        <pre><code class="json" v-html="resp.pretty_header"></code></pre>
                         <h3>Response body</h3>
-                        <pre>{{ format(resp.body) }}</pre>
+                        <pre><code class="json" v-html="resp.pretty_body"></code></pre>
                     </div>
                 </div>
             </div>
