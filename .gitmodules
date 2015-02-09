@@ -16,3 +16,9 @@
 [submodule "deps/goldrush"]
 	path = deps/goldrush
 	url = git://github.com/DeadZen/goldrush.git
+[submodule "deps/cowlib"]
+	path = deps/cowlib
+	url = git://github.com/ninenines/cowlib.git
+[submodule "deps/ranch"]
+	path = deps/ranch
+	url = git://github.com/ninenines/ranch.git
