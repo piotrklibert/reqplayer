@@ -8,14 +8,14 @@ $module: 'main-table';
 .#{$module}__header {
 	background-color: $navy;
 	color: $very-light-gray;
-	display: table;
+	@extend %display-table;
 }
 
 .#{$module}__header-title {
+	@extend %table-cell;
+	@extend %text-center;
 	border-right: 1px solid $table-border-color;
-	display: table-cell;
 	padding: $table-item-padding;
-	text-align: center;
 
 	&:last-child {
 		border-right: 0;
@@ -26,7 +26,7 @@ $module: 'main-table';
 	border: 1px solid $table-border-color;
 	border-top: 0;
 	cursor: pointer;
-	display: table;
+	@extend %display-table;
 
 	&:nth-child(odd) {
 		background-color: $very-light-gray;
@@ -35,13 +35,10 @@ $module: 'main-table';
 
 .#{$module}__row-item {
 	@extend .#{$module}__header-title;
-
-	display: table-cell;
 }
 
 .#{$module}__row-item--sid-wrap {
-	@extend .#{$module}__header-title;
-
+	@extend .#{$module}__row-item;
 	font-family: $font-monospace;
   font-size: 110%;
 

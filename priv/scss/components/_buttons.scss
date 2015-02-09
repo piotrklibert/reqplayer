@@ -1,0 +1,26 @@
+.button-main {
+	background-color: $red;
+	-moz-border-radius: $controls-border-radius;
+  -webkit-border-radius: $controls-border-radius;
+  border-radius: $controls-border-radius;
+  -moz-box-shadow: 0px 2px 0px darken($red, 20%);
+  -webkit-box-shadow: 0px 2px 0px darken($red, 20%);
+  box-shadow: 0px 2px 0px darken($red, 20%);
+	color: $white;
+	padding: $input-padding;
+
+	&:hover {
+		color: $white;
+		background-color: darken($red, 15%);
+	}
+
+	&:focus {
+		outline: none;
+	}
+
+	&:active {
+		// 'real' clicked button effect
+	  position: relative;
+		top: 1px;
+	}
+}

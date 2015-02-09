@@ -9,23 +9,27 @@
         <title>ReqViewer</title>
 
         <script src="/scripts/bundle.js"></script>
-        <link rel="stylesheet" href="/styles/styles.css" type="text/css">
-        <link rel="stylesheet" href="/styles/main.css" type="text/css">
         <link rel="stylesheet" href="/styles/flakes.css" type="text/css">
+        <link rel="stylesheet" href="/styles/main.css" type="text/css">
     </head>
     <body>
 
-        <header class="header">
-            <label for="session-filter">Filter:</label>
-            <input type="text" class="header__filter-input" v-model="filterExpr" placeholder="Session or method..." />
-            <span class=count>(reqs: {{count}})</span>
-            <a v-if="selectedRows.length &gt;  0" v-transition="fade-in-out" v-attr="href: encodedJsonData" class="fade-in-out" target="_blank">Dump JSON</a>
+        <header class="header grid-12">
+            <div class="header__app-logo span-2">ReqViewer</div>
+            <div class="span-8 text-center">
+                <label for="session-filter" class="header__filter-label">Filter:</label>
+                <input type="text" class="header__filter-input" v-model="filterExpr" placeholder="Session or method..." />
+                <span class="count">(reqs: {{count}})</span>
+            </div>
+            <div class="header__actions span-2 text-right">
+               <a v-attr="href: encodedJsonData" class="button-main fade-in-out" v-class="disabled: !(selectedRows.length &gt; 0) " target="_blank">Dump JSON</a>
+            </div>
         </header>
 
         <section class="main-table">
             <header class="main-table__header grid-12">
                 <div class="main-table__header-title span-1">
-            <!--         <a v-on="click: selectAll">Select all</a>&nbsp;/&nbsp;<a v-on="click: deselectAll">Deselect all</a> -->
+                    <a v-on="click: selectAll">Select all</a>&nbsp;/&nbsp;<a v-on="click: deselectAll">Deselect all</a>
                 </div>
                 <div class="main-table__header-title span-4">Session ID</div>
                 <div class="main-table__header-title span-1">Method</div>
