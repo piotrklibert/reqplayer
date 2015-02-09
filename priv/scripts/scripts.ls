@@ -65,6 +65,9 @@ window.onload = ->
 
 
         methods:
+            toggle-all: (ev) ->
+                _.map (.checked = ev.target.checked), @pings
+
             deselect-all: -> _.map (.checked = false), @pings
             select-all: -> _.map (.checked = true), @pings
             toggle-body: -> it.show_body = not it.show_body
