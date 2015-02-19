@@ -150,7 +150,7 @@ drop_many(N, Q) ->
     Q2 = queue:drop(Q),
     drop_many(N-1, Q2).
 
-cache_message(#state{queue=Q, q_len=L} = State, Val) when L >= ?DROP_STEP * 4 ->
+cache_message(#state{queue=Q, q_len=L} = State, Val) when L >= ?DROP_STEP * 2 ->
     NState = State#state{
                queue = drop_many(?DROP_STEP, Q),
                q_len = L - ?DROP_STEP
