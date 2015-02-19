@@ -1,0 +1,31 @@
+# -*- mode: org -*-
+#+AUTHOR:"Piotr Klibert"
+#+OPTIONS: H:2 toc:nil ^:nil html-postamble:nil
+#+HTML_HEAD: <style>pre.src { background: #484848; color: white; } #content {max-width: 960px; margin: auto;} pre.src:before { color: black; }</style>
+
+
+#+BEGIN_SRC ditaa :file diagram.png
+        +---------+
+  +-----+         |     +--------+     +-----------+                          +------------+
+  |     |  Nginx  |     | Redis  |     | ReqViewer |<-------------------------+ ReqViewer  |
+  | +-->|   Lua   +---->| pubsub +---->|  backend  |                          | frontend   |
+  | |   |         |     |        |     | (Erlang)  +------------------------->| (LS + Vue) |
+  | |   +-+-------+     +--------+     +-----------+      (WebSockets)        +-----+------+
+  | |     |   ^                                                                     |
+  | |     v   |                  +------------+            +---------+              |
+  | | +-------+------+           | ReqManager |<-----------+  JSON   |<-------------+
+  | | | Some backend |           | (Python)   |            |  dumps  |
+  | | |              |           |  TODO      +-------+    +---------+
+  | | +--------------+           ++--------+--+       +---------+
+  | |                             | ^      | ^                  |
+  | |                             | |      v |                  v
+  | |        +-------------+      | | +------+-----+    +-------------+
+  | |        |             |<-----+ | |            |    |             |
+  | |        | ReqProcessor|        | | ReqTestGen |    |  ReqPlayer  |
+  | |        |    (TODO)   +--------+ |   (TODO)   |    |    (TODO)   |
+  | |        +-------------+          +------------+    +-+-----------+
+  | |                                                     | ^
+  | +-----------------------------------------------------+ |
+  |                                                         |
+  +---------------------------------------------------------+
+#+END_SRC
