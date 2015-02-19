@@ -151,10 +151,10 @@ drop_many(N, Q) ->
     drop_many(N-1, Q2).
 
 cache_message(#state{queue=Q, q_len=L} = State, Val) when L >= ?DROP_STEP * 2 ->
-    io:format("Trimming history..."),
+    io:format("Trimming history...~n"),
     NState = State#state{
-               queue = drop_many(?DROP_STEP, Q),
-               q_len = L - ?DROP_STEP
+        queue = drop_many(?DROP_STEP, Q),
+        q_len = L - ?DROP_STEP
     },
     cache_message(NState, Val);
 
