@@ -16,7 +16,7 @@ if ./rebar compile; then
     erl \
         -pa deps/cowboy/ebin deps/cowlib/ebin deps/goldrush/ebin \
             deps/lager/ebin deps/ranch/ebin deps/eredis/ebin/ \
-            deps/jiffy/ebin/ \
+            deps/jiffy/ebin/ deps/ej/ebin/ \
         -pz ./ebin \
         -config app.config \
         -sname reqviewer \

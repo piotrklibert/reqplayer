@@ -9,9 +9,6 @@
 -compile([{parse_transform, lager_transform}]).
 
 -behaviour(gen_server).
-%%--------------------------------------------------------------------
-%% Include files
-%%--------------------------------------------------------------------
 
 %%--------------------------------------------------------------------
 %% External exports
@@ -27,10 +24,14 @@
     code_change/3
 ]).
 
--export([register/0]).
--export([register/1]).
--export([unregister/1]).
--export([history/0]).
+-export([
+    register/0,
+    register/1,
+    unregister/1,
+    history/0,
+    drop/0,
+    purge/0
+]).
 
 -record(state, {
     redis,
@@ -41,7 +42,13 @@
     filters=[]
 }).
 
+
 -define(CHANNEL, <<"newreq">>).
+
+-define(DROP_STEP, 40).
+-define(MAX_MSG_SIZE, 3 * 1024).
+-define(MAX_BODY_SIZE, 3 * 1024).
+
 
 %%====================================================================
 %% External functions
@@ -68,6 +75,11 @@ unregister(Pid) ->
 history() ->
     gen_server:call(?MODULE, {history}).
 
+drop() ->
+    gen_server:call(?MODULE, {drop, 1}).
+
+purge() ->
+    gen_server:call(?MODULE, {drop, all}).
 
 %%====================================================================
 %% Server functions
@@ -81,7 +93,14 @@ init([]) ->
 
 
 
-
+handle_call({drop, all}, _, State) ->
+    NewState = State#state{queue=queue:new(), q_len=1},
+    {reply, ok, NewState};
+handle_call({drop, N}, _, State) when is_number(N) ->
+    {reply, ok, State#state{
+        queue = drop_many(N, State#state.queue),
+        q_len = State#state.q_len - N
+    }};
 handle_call({register, Pid}, _, State) ->
     {reply, ok, add_listener(Pid, State)};
 
@@ -105,16 +124,17 @@ handle_cast(_Msg, State) ->
 %% Handling Redis PUB/SUB messages
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-handle_info({subscribed, ?CHANNEL, Redis}, #state{redis_sub=Redis} = State) ->
+handle_info({subscribed, ?CHANNEL, Redis},
+            #state{redis_sub=Redis} = State) ->
     eredis_sub:ack_message(Redis),
     {noreply, State};
 
 handle_info({message, _Chan, Val, RedisSub},
             #state{redis_sub=RedisSub, redis=_Redis} = State) ->
-
-    [Pid ! {text, Val} || Pid <- State#state.listeners],
     eredis_sub:ack_message(RedisSub),
     State2 = cache_message(State, Val),
+    %% send received message to all registered listeners
+    [Pid ! {text, State2#state.queue} || Pid <- State2#state.listeners],
     {noreply, State2};
 
 handle_info(_Info, State) ->
@@ -143,15 +163,9 @@ drop_listener(Pid, State = #state{listeners = Listeners}) ->
 
 %% Functions for maintaining cache/history of requests of a given length
 
--define(DROP_STEP, 40).
-
-drop_many(0, Q) -> Q;
-drop_many(N, Q) ->
-    Q2 = queue:drop(Q),
-    drop_many(N-1, Q2).
 
 cache_message(#state{queue=Q, q_len=L} = State, Val) when L >= ?DROP_STEP * 2 ->
-    io:format("Trimming history...~n"),
+    io:format("~nTrimming history...~n"),
     NState = State#state{
         queue = drop_many(?DROP_STEP, Q),
         q_len = L - ?DROP_STEP
@@ -159,5 +173,45 @@ cache_message(#state{queue=Q, q_len=L} = State, Val) when L >= ?DROP_STEP * 2 ->
     cache_message(NState, Val);
 
 cache_message(#state{queue=Q, q_len=L} = State, Val) ->
-    NewQ = queue:in(Val, Q),
+    if
+        byte_size(Val) >= ?MAX_MSG_SIZE ->
+            cache_too_big(State, Val);
+
+        true ->
+            NewQ = queue:in(Val, Q),
+            State#state{queue=NewQ, q_len=L+1}
+    end.
+
+
+
+cache_too_big(#state{queue=Q, q_len=L} = State, Val) ->
+    JSON_Data = jiffy:decode(Val),
+    JSON_Data2 = replace_too_long_values(
+      [{{"req", "body"}, <<"Request body too long">>},
+       {{"resp", "body"}, <<"Response body too long">>}],
+      JSON_Data
+     ),
+    %% it's important to encode the data back, otherwise formatting routines in
+    %% history handling will fail
+    NewQ = queue:in(jiffy:encode(JSON_Data2), Q),
     State#state{queue=NewQ, q_len=L+1}.
+
+
+replace_too_long_values([], JSON) -> JSON;
+replace_too_long_values([ {Sel, Repl} | T ], JSON) ->
+    KeyLength = get_js_val_size(ej:get(Sel, JSON)),
+    if
+        KeyLength > ?MAX_BODY_SIZE ->
+            replace_too_long_values(T, ej:set(Sel, JSON, Repl));
+        true ->
+            replace_too_long_values(T, JSON)
+    end.
+
+get_js_val_size(undefined) -> 0;
+get_js_val_size(V) when is_binary(V) -> byte_size(V).
+
+
+drop_many(0, Q) -> Q;
+drop_many(N, Q) ->
+    Q2 = queue:drop(Q),
+    drop_many(N-1, Q2).
