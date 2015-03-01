@@ -15,23 +15,10 @@
 -export([start_link/0]).
 
 %% gen_server callbacks
--export([
-    init/1,
-    handle_call/3,
-    handle_cast/2,
-    handle_info/2,
-    terminate/2,
-    code_change/3
-]).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2,
+         code_change/3]).
+-export([register/0, register/1, unregister/1, history/0, drop/0, purge/0]).
 
--export([
-    register/0,
-    register/1,
-    unregister/1,
-    history/0,
-    drop/0,
-    purge/0
-]).
 
 -record(state, {
     redis,
@@ -45,9 +32,9 @@
 
 -define(CHANNEL, <<"newreq">>).
 
--define(DROP_STEP, 40).
--define(MAX_QUEUE_LEN, 4).
--define(MAX_MSG_SIZE, 3 * 1024).
+-define(DROP_STEP,     40).
+-define(MAX_QUEUE_LEN, 45).
+-define(MAX_MSG_SIZE,  3 * 1024).
 -define(MAX_BODY_SIZE, 3 * 1024).
 
 
@@ -62,25 +49,13 @@ start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 
-register() ->
-    gen_server:call(?MODULE, {register, self()}).
+register()      -> gen_server:call(?MODULE, {register, self()}).
+register(Pid)   -> gen_server:call(?MODULE, {register, Pid}).
+unregister(Pid) -> gen_server:call(?MODULE, {unregister, Pid}).
+history()       -> gen_server:call(?MODULE, {history}).
+drop()          -> gen_server:call(?MODULE, {drop, 1}).
+purge()         -> gen_server:call(?MODULE, {drop, all}).
 
-register(Pid) ->
-    gen_server:call(?MODULE, {register, Pid}).
-
-
-unregister(Pid) ->
-    gen_server:call(?MODULE, {unregister, Pid}).
-
-
-history() ->
-    gen_server:call(?MODULE, {history}).
-
-drop() ->
-    gen_server:call(?MODULE, {drop, 1}).
-
-purge() ->
-    gen_server:call(?MODULE, {drop, all}).
 
 %%====================================================================
 %% Server functions
@@ -102,17 +77,12 @@ handle_call({drop, N}, _, State) when is_number(N) ->
         queue = drop_many(N, State#state.queue),
         q_len = State#state.q_len - N
     }};
-handle_call({register, Pid}, _, State) ->
-    {reply, ok, add_listener(Pid, State)};
 
-handle_call({unregister, Pid}, _, State) ->
-    {reply, ok, drop_listener(Pid, State)};
+handle_call({register, Pid}, _, State) -> {reply, ok, add_listener(Pid, State)};
+handle_call({unregister, Pid}, _, State) -> {reply, ok, drop_listener(Pid, State)};
+handle_call({history}, _, State) -> {reply, State#state.queue, State};
 
-handle_call({history}, _, State) ->
-    {reply, State#state.queue, State};
-
-handle_call(_Request, _From, State) ->
-    {reply, State, State}.
+handle_call(_Request, _From, State) -> {reply, State, State}.
 
 
 
@@ -168,7 +138,7 @@ drop_listener(Pid, State = #state{listeners = Listeners}) ->
 %% drop some items before proceeding if not
 cache_message(#state{queue=Q, q_len=L} = State, Val)
   when L >= ?MAX_QUEUE_LEN ->
-    t:pnl("Trimming history"),
+    lager:info("Trimming history", []),
     cache_message(trim_queue(State), Val);
 
 cache_message(#state{queue=Q, q_len=L} = State, Val) ->
