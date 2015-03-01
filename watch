@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+watchify -t liveify -v  -o priv/scripts/scripts.js priv/scripts/scripts.ls
