@@ -74,8 +74,6 @@ window.onload = ->
             toggle-all: (ev) ->
                 _.map (.checked = ev.target.checked), @pings
 
-            # deselect-all: -> _.map (.checked = false), @pings
-            # select-all: -> _.map (.checked = true), @pings
             toggle-body: -> it.show_body = not it.show_body
 
             formatTime: (time) ->
@@ -143,7 +141,6 @@ window.onload = ->
                 @$data.count++
                 this.$data.pings.unshift data
 
-    # prepopulate a list with some data...?
     getJSON "/history", _.map vm~add-event
 
 

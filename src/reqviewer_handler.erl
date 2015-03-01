@@ -13,7 +13,7 @@
 
 % Prepare WebSocket connection
 init(Req, Opts) ->
-    lager:info("New WebSocket connection with: ~s", [t:fmt(Req)]),
+    lager:info("New WebSocket connection"),
     reqviewer_redis_sub:register(self()),
     {cowboy_websocket, Req, Opts}.
 
@@ -30,14 +30,6 @@ init(Req, Opts) ->
 websocket_handle({text, <<"init">>}, Req, State) ->
     {reply, {text, <<"ok">>}, Req, State};
 
-websocket_handle({text, Msg}, Req, State) ->
-    lager:info("websocket_handle message arrived: ~p", [Msg]),
-    lager:info("~s ~p", [t:fmt(Req), State]),
-    Resp = {[
-        {success, true},
-        {errors, []}
-    ]},
-	{reply, {text, jiffy:encode(Resp)}, Req, State};
 
 websocket_handle(_Data, Req, State) ->
 	{ok, Req, State}.
@@ -50,7 +42,6 @@ websocket_handle(_Data, Req, State) ->
 %% We got a notification from Redis, new Trace has arrived. We're just passing
 %% it to the client as is, without any changes.
 websocket_info({text, TraceData}, Req, State) ->
-    % io:format("~p", [jiffy:decode(TraceData)]),
     {reply, {text, TraceData}, Req, State};
 
 websocket_info(ping, Req, State) ->

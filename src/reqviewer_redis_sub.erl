@@ -46,6 +46,7 @@
 -define(CHANNEL, <<"newreq">>).
 
 -define(DROP_STEP, 40).
+-define(MAX_QUEUE_LEN, 4).
 -define(MAX_MSG_SIZE, 3 * 1024).
 -define(MAX_BODY_SIZE, 3 * 1024).
 
@@ -134,7 +135,7 @@ handle_info({message, _Chan, Val, RedisSub},
     eredis_sub:ack_message(RedisSub),
     State2 = cache_message(State, Val),
     %% send received message to all registered listeners
-    [Pid ! {text, State2#state.queue} || Pid <- State2#state.listeners],
+    [Pid ! {text, Val} || Pid <- State2#state.listeners],
     {noreply, State2};
 
 handle_info(_Info, State) ->
@@ -163,38 +164,45 @@ drop_listener(Pid, State = #state{listeners = Listeners}) ->
 
 %% Functions for maintaining cache/history of requests of a given length
 
-
-cache_message(#state{queue=Q, q_len=L} = State, Val) when L >= ?DROP_STEP * 2 ->
-    io:format("~nTrimming history...~n"),
-    NState = State#state{
-        queue = drop_many(?DROP_STEP, Q),
-        q_len = L - ?DROP_STEP
-    },
-    cache_message(NState, Val);
+%% Before caching we need to check if we have enough space in the queue; let's
+%% drop some items before proceeding if not
+cache_message(#state{queue=Q, q_len=L} = State, Val)
+  when L >= ?MAX_QUEUE_LEN ->
+    t:pnl("Trimming history"),
+    cache_message(trim_queue(State), Val);
 
 cache_message(#state{queue=Q, q_len=L} = State, Val) ->
-    if
-        byte_size(Val) >= ?MAX_MSG_SIZE ->
-            cache_too_big(State, Val);
+    Val2 = if
+        byte_size(Val) >= ?MAX_MSG_SIZE -> trim_message(Val);
+        true                            -> Val
+    end,
+    State#state{
+      queue = queue:in(Val2, Q),
+      q_len = L+1
+    }.
 
-        true ->
-            NewQ = queue:in(Val, Q),
-            State#state{queue=NewQ, q_len=L+1}
-    end.
+
+
+trim_queue(#state{queue=Q, q_len=L} = State) ->
+    NewLength = if
+        L - ?DROP_STEP < 0 -> 0;
+        true -> L - ?DROP_STEP
+    end,
+    State#state{
+        queue = drop_many(?DROP_STEP, Q),
+        q_len = NewLength
+    }.
 
 
 
-cache_too_big(#state{queue=Q, q_len=L} = State, Val) ->
+trim_message(Val) ->
     JSON_Data = jiffy:decode(Val),
     JSON_Data2 = replace_too_long_values(
       [{{"req", "body"}, <<"Request body too long">>},
        {{"resp", "body"}, <<"Response body too long">>}],
       JSON_Data
-     ),
-    %% it's important to encode the data back, otherwise formatting routines in
-    %% history handling will fail
-    NewQ = queue:in(jiffy:encode(JSON_Data2), Q),
-    State#state{queue=NewQ, q_len=L+1}.
+    ),
+    jiffy:encode(JSON_Data2).
 
 
 replace_too_long_values([], JSON) -> JSON;
@@ -207,11 +215,17 @@ replace_too_long_values([ {Sel, Repl} | T ], JSON) ->
             replace_too_long_values(T, JSON)
     end.
 
+
 get_js_val_size(undefined) -> 0;
-get_js_val_size(V) when is_binary(V) -> byte_size(V).
+get_js_val_size(V) when is_binary(V) -> byte_size(V);
+get_js_val_size(V) when is_list(V) -> length(V).
 
 
-drop_many(0, Q) -> Q;
-drop_many(N, Q) ->
-    Q2 = queue:drop(Q),
-    drop_many(N-1, Q2).
+drop_many(0, Queue) -> Queue;
+drop_many(N, Queue) ->
+    try
+        Q2 = queue:drop(Queue),
+        drop_many(N-1, Q2)
+    catch
+        _:empty -> Queue
+    end.
