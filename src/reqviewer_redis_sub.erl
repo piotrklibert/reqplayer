@@ -34,8 +34,8 @@
 
 -define(DROP_STEP,     40).
 -define(MAX_QUEUE_LEN, 45).
--define(MAX_MSG_SIZE,  3 * 1024).
--define(MAX_BODY_SIZE, 3 * 1024).
+-define(MAX_MSG_SIZE,  10 * 1024).
+-define(MAX_BODY_SIZE, 10 * 1024).
 
 
 %%====================================================================
