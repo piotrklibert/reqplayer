@@ -37,6 +37,16 @@
 -define(MAX_MSG_SIZE,  45 * 1024).
 -define(MAX_BODY_SIZE, 45 * 1024).
 
+-export([config/0]).
+config() ->
+    %% for debug purposes only
+    [
+     {drop_step, ?DROP_STEP},
+     {max_queue_len, ?MAX_QUEUE_LEN},
+     {max_msg_size, ?MAX_MSG_SIZE},
+     {max_body_size, ?MAX_BODY_SIZE}
+    ].
+
 
 %%====================================================================
 %% External functions
