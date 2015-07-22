@@ -88,9 +88,9 @@ handle_call({drop, N}, _, State) when is_number(N) ->
         q_len = State#state.q_len - N
     }};
 
-handle_call({register, Pid}, _, State) -> {reply, ok, add_listener(Pid, State)};
+handle_call({register, Pid}, _, State)   -> {reply, ok, add_listener(Pid, State)};
 handle_call({unregister, Pid}, _, State) -> {reply, ok, drop_listener(Pid, State)};
-handle_call({history}, _, State) -> {reply, State#state.queue, State};
+handle_call({history}, _, State)         -> {reply, State#state.queue, State};
 
 handle_call(_Request, _From, State) -> {reply, State, State}.
 

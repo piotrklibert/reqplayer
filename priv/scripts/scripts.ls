@@ -90,13 +90,13 @@ window.onload = ->
             formatDate: (timestamp) ->
                 date = new Date(timestamp*1000ms)
                 # year = date.getFullYear()
-                # month = date.getMonth()  + 1
-                # day = date.getDate()
+                month = date.getMonth()  + 1
+                day = date.getDate()
                 hour = date.getHours()
                 min = date.getMinutes()
                 sec = date.getSeconds()
                 # "#day-#month-#year"
-                "#hour:#min:#sec"
+                "#hour:#min:#sec #day/#month"
 
             format: (response-body) ->
                 if /^{/.test response-body

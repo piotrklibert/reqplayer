@@ -45,6 +45,7 @@ start(_StartType, _StartArgs) ->
         [{'_', [
             {"/websocket", reqviewer_handler, []},
             {"/history", reqviewer_handler_history, []},
+            {"/event", rq_handler_event, []},
             %% {"/suites", reqviewer_testsuites, []},
             {"/", cowboy_static, {priv_file, reqviewer, "html/index.html"}},
             {"/[...]", cowboy_static, {priv_dir, reqviewer, ""}}
