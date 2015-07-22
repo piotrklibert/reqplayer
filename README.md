@@ -14,7 +14,7 @@ We've got our first real feature request!
 
 1. Add an ability to "fix" a value returned from an URI so that all subsequent
    requests do not touch the backend at all, and response is served directly
-   from ReqPlayer cache in Redis.
+   from ReqPlayer cache in Redis. Thanks to Norbert S. for bringing this up.
 
 
 ## TODO
