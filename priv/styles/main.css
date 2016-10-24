@@ -202,4 +202,13 @@ input[type="text"] {
   overflow: auto;
   padding: 2em; }
 
-/*# sourceMappingURL=main.css.map */
+.args {
+    overflow: auto;
+    white-space: pre;
+    font-size: 0.7rem;
+    background: #afafaf;
+    text-align: left;
+    }
+.main-table__row-item {
+    height: 146px;
+    }

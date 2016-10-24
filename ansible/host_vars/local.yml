@@ -1,0 +1,11 @@
+user: cji
+root: "/home/cji/projects/reqviewer/"
+
+install_prefix: "{{ root }}/resty/"
+build_dir: "{{ root }}/resty/_build"
+
+resty_ver: "openresty-1.11.2.1"
+resty_url: "https://openresty.org/download/openresty-1.11.2.1.tar.gz"
+luajit_url: "http://luajit.org/download/LuaJIT-2.1.0-beta2.tar.gz"
+luajit_ver: "LuaJIT-2.1.0-beta2"
+luafun_url: https://raw.githubusercontent.com/rtsisyk/luafun/master/fun.lua

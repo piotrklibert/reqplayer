@@ -1,6 +1,7 @@
 -module(t). % `t`ools module
 
 -compile(export_all).
+-export([interpose/2]).
 
 day_changed() ->
     spawn_link(?MODULE, day_changed, [calendar:local_time()]).
@@ -33,3 +34,11 @@ p(Term) ->
 
 pnl(Term) ->
     io:format("~n~n~p~n~n", [Term]).
+
+
+interpose(List, Sep) ->
+    interpose(List, Sep, []).
+
+interpose([]           , Sep, Acc) -> [];
+interpose([Term]       , Sep, Acc) -> lists:reverse([Term | Acc]);
+interpose([Head | Tail], Sep, Acc) -> interpose(Tail, Sep, [Sep, Head | Acc]).

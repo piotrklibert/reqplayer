@@ -1,0 +1,31 @@
+- name: Cofigure and build LuaJIT and OpenRESTY
+  hosts: local
+  gather_facts: no
+  tasks:
+    - get_url:
+        url: "{{ resty_url }}"
+        dest: "{{ build_dir }}/resty.tar.gz"
+
+    - shell: >-
+        cd {{build_dir}} \
+        && tar zxfv resty.tar.gz \
+        && mv {{resty_ver}} resty/
+      args:
+        creates: "{{build_dir}}/resty"
+
+    - shell: >-
+        cd {{build_dir}}/resty/ \
+        && ./configure \
+            --prefix={{ install_prefix }} \
+            --user={{ user }} \
+            --conf-path={{ root }}/config/nginx.conf \
+        && make && make install
+      args:
+        creates: "{{ install_prefix }}/nginx/sbin/nginx"
+
+    - get_url:
+        url: "{{ luafun_url }}"
+        dest: "{{ install_prefix }}/lualib/fun.lua"
+
+
+    - debug: msg="{{ build_dir }}"

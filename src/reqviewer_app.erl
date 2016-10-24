@@ -37,16 +37,18 @@ start(_StartType, _StartArgs) ->
     end,
 
     lager:start(),
-
-    {ok, _} = reqviewer_sup:start_link(self()),
-
+    try
+        {ok, _} = reqviewer_sup:start_link(self())
+    catch
+        error:_ ->
+            t:p("Couldn't start Redis connection!")
+    end,
 
     RoutesTable = cowboy_router:compile(
         [{'_', [
             {"/websocket", reqviewer_handler, []},
             {"/history", reqviewer_handler_history, []},
             {"/event", rq_handler_event, []},
-            %% {"/suites", reqviewer_testsuites, []},
             {"/", cowboy_static, {priv_file, reqviewer, "html/index.html"}},
             {"/[...]", cowboy_static, {priv_dir, reqviewer, ""}}
         ]}]

@@ -74,7 +74,10 @@ window.onload = ->
             toggle-all: (ev) ->
                 _.map (.checked = ev.target.checked), @pings
 
-            toggle-body: -> it.show_body = not it.show_body
+            toggle-body: (data, el, event) ->
+                console.log "asdasd"
+                if event.target in document.querySelectorAll(".main-table__row-item")
+                    data.show_body = not data.show_body
 
             formatTime: (time) ->
                 (parseFloat(time) * 1000ms) .toFixed 2
