@@ -1,0 +1,94 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Piotr Klibert" />
+    <link rel="shortcut icon" href="/favicon.png?v=0.1" />
+
+    <title>ReqViewer</title>
+
+    <link rel="stylesheet" href="/styles/main.css" type="text/css" />
+    <link rel="stylesheet" href="/node_modules/highlight.js/styles/tomorrow.css" />
+    <script src="https://unpkg.com/vue@2.0.3/dist/vue.js"></script>
+    <script src="/scripts/bundle.js"></script>
+
+  </head>
+  <body>
+    <div id="main" class="container-fluid">
+      <!-- Top header, with search and dump button -->
+      <section class="row header">
+        <div class="col-md-2 logo">ReqViewer</div>
+
+        <div class="col-md-8 text-center">
+          <label for="session-filter" class="filter-label">Filter:</label>
+          <input type="text" class="filter-input"
+                 v-model="filterExpr"
+                 placeholder="Session or method..." />
+          <span class="count">(reqs: {{count}})</span>
+        </div>
+
+        <div class="header__actions col-md-2 text-right">
+          <a v-bind:href="encodedJsonData"
+             class="button-main fade-in-out"
+             v-bind:class="{disabled: !(selectedRows.length &gt; 0)}"
+             target="_blank">Dump JSON</a>
+        </div>
+      </section>
+
+
+      <header class="column-names row">
+        <div class="col-md-1"><input type="checkbox" v-on:change="toggleAll" /></div>
+        <div class="col-md-2">Session ID</div>
+        <div class="col-md-1">Method</div>
+        <div class="col-md-2">URL</div>
+        <div class="col-md-3">Params</div>
+        <div class="col-md-1">Status</div>
+        <div class="col-md-2">Duration</div>
+      </header>
+
+      <div v-for="row in filtered"
+           v-on:click="toggleBody(row, $el, $event)"
+           class="row event">
+
+        <div class="overview">
+          <div class="col-md-1"><input type="checkbox" v-model="row.checked" /></div>
+          <div class="sid-wrap col-md-2">
+            <span class="sid" v-bind:style="{color: colorize(row.sess)}">
+              {{ row.sess }}
+            </span><br/>
+            <span>(IP:&nbsp;{{row.ip}})</span>
+          </div>
+          <div class="col-md-1">{{ row.method }}</div>
+          <div class="col-md-2">{{ row.uri }}</div>
+          <div class="col-md-3"><pre>{{ row.args }}</pre></div>
+          <div class="col-md-1">{{ row.resp.status }}</div>
+          <div class="col-md-2">
+            {{ formatTime(row.time_taken) }} ms<br/>
+            ({{ formatDate(row.id) }})
+          </div>
+        </div>
+
+        <div v-if="row.show_body" class="col-md-12">
+          <div class="data-table__col req col-md-6">
+            <h2>Request</h2>
+            <pre>{{ formatReq(row) }}</pre>
+            <h3>Headers</h3>
+            <pre><code class="json" v-html="row.req.pretty_header"></code></pre>
+            <hr/>
+            <h3>Request body</h3>
+            <pre><code class="json" v-html="row.req.pretty_body"></code></pre>
+          </div>
+          <div class="data-table__col req col-md-6">
+            <h2>Response</h2>
+            <h3>Response headers</h3>
+            <pre><code class="json" v-html="row.resp.pretty_header"></code></pre>
+            <h3>Response body</h3>
+            <pre><code class="json" v-html="row.resp.pretty_body"></code></pre>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

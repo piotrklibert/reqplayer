@@ -130,21 +130,22 @@ function save_to_redis(sid, req_header, req_body, resp_header, resp_body, resp_s
    r:connect("127.0.0.1", 6379)
 
    local trace_data = {
-      id           = ngx.now(),
-      uri          = ngx.var.uri,
-      args         = ngx.req.get_uri_args(),
-      sess         = sid,
-      method       = ngx.var.request_method,
-      time_taken   = ngx.ctx.time_taken,
-      req = {
-         header=req_header,
-         body=req_body
-      },
-      resp = {
-         status=resp_status,
-         header=resp_header,
-         body=resp_body
-      }
+       id           = ngx.now(),
+       ip           = ngx.var.remote_addr,
+       uri          = ngx.var.uri,
+       args         = ngx.req.get_uri_args(),
+       sess         = sid,
+       method       = ngx.var.request_method,
+       time_taken   = ngx.ctx.time_taken,
+       req = {
+           header=req_header,
+           body=req_body
+       },
+       resp = {
+           status=resp_status,
+           header=resp_header,
+           body=resp_body
+       }
    }
 
    -- append the data to a list associated with current session

@@ -21,10 +21,11 @@
 
 
 require! {
-    "prelude-ls": _
-    "vue": Vue
-    jx
+  "jquery": $
+  "prelude-ls": _
+  jx
 }
+
 
 hljs = require "highlight.js"
 
@@ -41,9 +42,8 @@ format-json = (json-string) ->
 
 window.onload = ->
     sessions-to-colors-map = {}
-
-    window.vm = new Vue do
-        el: "body"
+    window.vm = new Vue(
+        el: "\#main"
         data:
             pings: []
             filter-expr: ""
@@ -76,19 +76,15 @@ window.onload = ->
 
             toggle-body: (data, el, event) ->
                 console.log "asdasd"
-                if event.target in document.querySelectorAll(".main-table__row-item")
+                if (event.target in document.querySelectorAll(".overview > div"))
+                    console.log "switched"
                     data.show_body = not data.show_body
 
             formatTime: (time) ->
                 (parseFloat(time) * 1000ms) .toFixed 2
 
             format-req: (req) ->
-                args = ""
-                for k,v of JSON.parse(req.args)
-                    args += k + "=" + encodeURIComponent(v) + "&"
-                args = args.replace(/&$/, "")
-
-                "#{req.method} #{req.uri}?#{args}"
+                "#{req.method} #{req.uri}"
 
             formatDate: (timestamp) ->
                 date = new Date(timestamp*1000ms)
@@ -140,9 +136,9 @@ window.onload = ->
                     d.appendChild document.createTextNode data.resp.body
                     data.resp.pretty_body = d.innerHTML
 
-
                 @$data.count++
                 this.$data.pings.unshift data
+    )
 
     getJSON "/history", _.map vm~add-event
 

@@ -1,5 +1,21 @@
 A viewer part of ReqPlayer - ReqViewer
 
+## Installation
+
+1. We need to compile Nginx and LuaJIT from source, so make sure you have
+all the prerequisites installed. On Fedora you can do this with:
+
+    sudo dnf builddep nginx luajit
+
+2. Install Ansible, Erlang and Redis.
+3. Go to `ansible` directory and run:
+
+    ansible-playbook -i inventory.ini build.yml
+
+(this will download, configure, compile and install the deps locally, in `resty`
+directory)
+4. Make sure you don't have
+
 ## Running
 
 You can customize how RQ will communicate with your Redis in app.config.

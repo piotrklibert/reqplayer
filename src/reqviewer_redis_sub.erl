@@ -112,6 +112,7 @@ handle_info({subscribed, ?CHANNEL, Redis},
 
 handle_info({message, _Chan, Val, RedisSub},
             #state{redis_sub=RedisSub, redis=_Redis} = State) ->
+    t:p(Val),
     eredis_sub:ack_message(RedisSub),
     State2 = cache_message(State, Val),
     %% send received message to all registered listeners

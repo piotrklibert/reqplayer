@@ -1,9 +1,10 @@
 *.dump
 deps
 ebin
+priv
 log
-priv/node_modules
-priv/.sass-cache
+node_modules
+.sass-cache
 bundle.js
 rel
 app.config
